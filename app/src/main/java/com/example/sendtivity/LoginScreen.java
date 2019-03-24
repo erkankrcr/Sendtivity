@@ -14,14 +14,16 @@ public class LoginScreen extends Activity {
         findViewById(R.id.GirisBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(LoginScreen.this,FragmentActivity.class);
+                intent.putExtra("Key","Giris");
                 startActivity(intent);
             }
         });
         findViewById(R.id.KayitBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(LoginScreen.this,FragmentActivity.class);
+                intent.putExtra("Key","Kayıt");
                 startActivity(intent);
             }
         });

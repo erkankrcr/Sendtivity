@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "328630731499",
+    "firebase_url": "https://sendtivity.firebaseio.com",
+    "project_id": "sendtivity",
+    "storage_bucket": "sendtivity.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328630731499:android:e4c9d34211c55de2",
+        "android_client_info": {
+          "package_name": "com.example.sendtivity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328630731499-5d50smj3fg2dict50ck5f76ngun7akuk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sendtivity",
+            "certificate_hash": "5a5d05b6a8ec7b518e4626a6f35b1ca7d9452214"
+          }
+        },
+        {
+          "client_id": "328630731499-s4r7fup9qp253906orh92ije1lfifjir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR8v95uEKDlEbN6oBdkwD59kjpCw_JZcM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328630731499-s4r7fup9qp253906orh92ije1lfifjir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -24,7 +24,7 @@ public class FragmentActivity extends Activity {
                 fm.beginTransaction().replace(R.id.FragmentFrame,new LoginFragment()).commit();
                 break;
             case "Kayıt":
-                fm.beginTransaction().replace(R.id.FragmentFrame,new LoginFragment()).commit();
+                fm.beginTransaction().replace(R.id.FragmentFrame,new SignFragment()).commit();
                 break;
             default:
                 Toast.makeText(this,"Değer Glemedi",Toast.LENGTH_SHORT).show();

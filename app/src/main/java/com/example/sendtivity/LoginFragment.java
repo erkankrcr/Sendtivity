@@ -1,10 +1,8 @@
 package com.example.sendtivity;
 
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
-import android.icu.text.UnicodeSetSpanner;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;

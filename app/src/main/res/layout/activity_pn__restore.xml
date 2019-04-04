@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#6A1CCF"
+    android:orientation="vertical"
+    >
+    <Button
+        android:id="@+id/LoginBackBtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/baseline_reply_black_18dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        >
+        <EditText
+            android:id="@+id/PNR_emailET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Kayıtlı Eposta Adresi"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:inputType="textEmailAddress"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Spinner
+                android:id="@+id/PNR_Spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+            </Spinner>
+            <EditText
+                android:id="@+id/PNR_numberET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Telefon Numarası"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:maxLength="10"
+                android:inputType="phone"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/PNR_SuccessBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yetkililere Yolla"
+            android:textStyle="bold"
+            android:background="#00D9AE"
+            android:layout_marginTop="50dp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.sendtivity;
+package com.example.sendtivity.Class;
 
 
 public class User{

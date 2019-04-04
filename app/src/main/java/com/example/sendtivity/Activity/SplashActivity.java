@@ -1,9 +1,11 @@
-package com.example.sendtivity;
+package com.example.sendtivity.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
+
+import com.example.sendtivity.R;
 
 public class SplashActivity extends Activity {
 
@@ -15,7 +17,7 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this,LoginScreen.class);
+                Intent intent = new Intent(SplashActivity.this, PhoneNumberActivity.class);
                 startActivity(intent);
                 finish();
             }

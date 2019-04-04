@@ -9,10 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FragmentActivity"></activity>
-        <activity android:name=".LoginScreen" />
+        <activity android:name=".Activity.PN_RestoreActivity"></activity>
+        <activity android:name=".Activity.PhoneVerifyActivity" />
+        <activity android:name=".Activity.PhoneNumberActivity" />
+        <activity android:name=".Activity.FragmentActivity" />
+        <activity android:name=".Activity.LoginScreen" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".Activity.SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

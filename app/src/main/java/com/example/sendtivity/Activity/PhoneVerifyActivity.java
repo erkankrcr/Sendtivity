@@ -70,7 +70,8 @@ public class PhoneVerifyActivity extends Activity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    System.out.println("SignInWithCredential Complete");
+                    Intent intent = new Intent(PhoneVerifyActivity.this,PhoneSignActivity.class);
+                    startActivity(intent);
                 }else{
                     System.out.println("SignInWithCredential Failed");
                 }

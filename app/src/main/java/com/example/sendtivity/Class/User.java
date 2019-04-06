@@ -4,6 +4,8 @@ package com.example.sendtivity.Class;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
+import java.util.ArrayList;
+
 
 public class User{
     public ProfilePhoto profilePhoto;
@@ -12,7 +14,7 @@ public class User{
     public String LastName;
     public String Email;
     public String PhoneNumber;
-    public Cursor Contact;
+    public ArrayList PhoneNumberList;
 
 
 

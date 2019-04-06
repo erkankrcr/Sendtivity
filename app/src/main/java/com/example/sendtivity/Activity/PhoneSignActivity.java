@@ -3,11 +3,13 @@ package com.example.sendtivity.Activity;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.provider.ContactsContract;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.sendtivity.Class.PersonInfo;
 import com.example.sendtivity.Class.ProfilePhoto;
 import com.example.sendtivity.Class.User;
 import com.example.sendtivity.R;
@@ -32,6 +35,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 public class PhoneSignActivity extends Activity {
@@ -41,6 +47,7 @@ public class PhoneSignActivity extends Activity {
     private EditText NameET;
     private EditText LastNameET;
     private EditText EmailET;
+    private Button Successbtn;
     private ProgressBar progressBar;
     private String Name;
     private String LastName;
@@ -61,16 +68,17 @@ public class PhoneSignActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_sign);
         mAuth = FirebaseAuth.getInstance();
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        StoreRef = mStorageRef.child("User/"+mAuth.getUid()+"/ProfilePhoto/"+myRef.push());
         databaseRef = FirebaseDatabase.getInstance();
         myRef = databaseRef.getReference("User");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        StoreRef = mStorageRef.child("User/"+mAuth.getUid()+"/ProfilePhoto/"+myRef.push().getKey());
         profilePhoto = new ProfilePhoto();
 
         imageView = ((ImageView) findViewById(R.id.PSA_photoImage));
         NameET = findViewById(R.id.PSA_NameET);
         LastNameET = findViewById(R.id.PSA_LastnameET);
         EmailET = findViewById(R.id.PSA_emailET);
+        Successbtn = findViewById(R.id.PSA_SuccessBtn);
         progressBar = findViewById(R.id.PSA_Progress);
 
 
@@ -86,7 +94,7 @@ public class PhoneSignActivity extends Activity {
 
         });
 
-        findViewById(R.id.PSA_SuccessBtn).setOnClickListener(new View.OnClickListener() {
+        Successbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 user = new User();
@@ -100,46 +108,7 @@ public class PhoneSignActivity extends Activity {
                             Toast.LENGTH_LONG
                     ).show();
                 }else {
-                    user.mAuthID = mAuth.getUid();
-                    user.Name = Name;
-                    user.LastName = LastName;
-                    user.Email = Email;
-
-                    StoreRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressBar.setProgress(0);
-                                    user.profilePhoto = profilePhoto;
-                                    myRef.child(mAuth.getUid()).setValue(user);
-                                    Toast.makeText(
-                                            PhoneSignActivity.this,
-                                            "Kayıt Tamamlandı",
-                                            Toast.LENGTH_LONG
-                                    ).show();
-                                }
-                            }, 500);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                          Toast.makeText(
-                                  PhoneSignActivity.this,
-                                  e.getMessage(),
-                                  Toast.LENGTH_LONG
-                          ).show();
-                        }
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            progressBar.setProgress((int) progress);
-                        }
-                    });
-
+                    UploadUser();
                 }
             }
         });
@@ -164,5 +133,92 @@ public class PhoneSignActivity extends Activity {
         }
 
 
+    }
+
+    private void UploadUser(){
+        user.mAuthID = mAuth.getUid();
+        user.Name = Name;
+        user.LastName = LastName;
+        user.Email = Email;
+
+
+        StoreRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setProgress(0);
+                        user.profilePhoto = profilePhoto;
+                        user.PhoneNumberList = ContactList();
+                        myRef.child(mAuth.getUid()).setValue(user);
+                        Toast.makeText(
+                                PhoneSignActivity.this,
+                                "Kayıt Tamamlandı",
+                                Toast.LENGTH_LONG
+                        ).show();
+                        Successbtn.setVisibility(View.VISIBLE);
+                    }
+                }, 500);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(
+                        PhoneSignActivity.this,
+                        e.getMessage(),
+                        Toast.LENGTH_LONG
+                ).show();
+                Successbtn.setVisibility(View.VISIBLE);
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                Successbtn.setVisibility(View.INVISIBLE);
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                progressBar.setProgress((int) progress);
+            }
+        });
+    }
+
+    private ArrayList ContactList(){
+        ArrayList list = new ArrayList();
+        ContentResolver contentResolver = getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null,
+                null, null, null);
+
+        if(cursor.getCount() > 0) {
+
+            while (cursor.moveToNext()) {
+
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)); // id ye göre eşleşme yapılacak
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)); // telefonda kayıtlı olan ismi
+                String lastname = "";
+                String lastnumber="";
+                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                    // telefon numarasına sahip ise if içine gir.
+                    Cursor person_cursor = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            new String[]{id}, null);
+                    while (person_cursor.moveToNext()) {
+                        String person_phoneNumber = person_cursor.getString(person_cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        if (lastname==name || lastnumber == person_phoneNumber){
+
+                        }else{
+                            list.add(new PersonInfo(name, person_phoneNumber)); // ismini ve telefon numarasını list içine at
+                            lastnumber = person_phoneNumber;
+                            lastname = name;
+                        }
+
+                    }
+                    person_cursor.close();
+                }
+
+            }
+        }
+        return list;
     }
 }

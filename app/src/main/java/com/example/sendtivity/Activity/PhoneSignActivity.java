@@ -60,7 +60,7 @@ public class PhoneSignActivity extends Activity {
     private FirebaseDatabase databaseRef;
     private DatabaseReference myRef;
     private StorageReference StoreRef;
-    private ProfilePhoto profilePhoto;
+    private String PhotoId;
 
 
 
@@ -72,9 +72,9 @@ public class PhoneSignActivity extends Activity {
         databaseRef = FirebaseDatabase.getInstance();
         myRef = databaseRef.getReference("User");
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        StoreRef = mStorageRef.child("User/"+mAuth.getUid()+"/ProfilePhoto/"+myRef.push().getKey());
-        profilePhoto = new ProfilePhoto();
-
+        PhotoId = myRef.push().getKey();
+        StoreRef = mStorageRef.child("User/"+mAuth.getUid()+"/ProfilePhoto/"+PhotoId);
+        user = new User();
         imageView = ((ImageView) findViewById(R.id.PSA_photoImage));
         NameET = findViewById(R.id.PSA_NameET);
         LastNameET = findViewById(R.id.PSA_LastnameET);
@@ -98,7 +98,6 @@ public class PhoneSignActivity extends Activity {
         Successbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user = new User();
                 Name = NameET.getText().toString();
                 LastName = LastNameET.getText().toString();
                 Email = EmailET.getText().toString();
@@ -127,8 +126,9 @@ public class PhoneSignActivity extends Activity {
                 && data != null && data.getData() != null )
         {
             filePath = data.getData();
-            profilePhoto.setImageUrl(filePath.getPath());
-            profilePhoto.setName(mAuth.getUid());
+            user.profilePhoto.ImageUrl=filePath.getPath();
+            user.profilePhoto.photoID=PhotoId;
+            user.profilePhoto.useProfilePhoto = true;
 
             Picasso.get().load(filePath).into(imageView);
         }
@@ -146,12 +146,10 @@ public class PhoneSignActivity extends Activity {
         StoreRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         progressBar.setProgress(0);
-                        user.profilePhoto = profilePhoto;
                         user.PhoneNumberList = ContactList();
                         myRef.child(mAuth.getUid()).setValue(user);
                         Toast.makeText(
@@ -162,7 +160,9 @@ public class PhoneSignActivity extends Activity {
                         SharedPreferences sharedPreferences = getSharedPreferences("LoginInfo",MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("RememberMe",true);
-
+                        editor.commit();
+                        Intent intent = new Intent(PhoneSignActivity.this,MainActivity.class);
+                        startActivity(intent);
                         Successbtn.setVisibility(View.VISIBLE);
                     }
                 }, 500);

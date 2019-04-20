@@ -19,7 +19,7 @@ public class User{
 
 
     public User(){
-
+        this.profilePhoto = new ProfilePhoto();
     }
     public User(String mAuthID,String Name,String LastName,String Email,String PhoneNumber){
         this.mAuthID = mAuthID;
@@ -27,7 +27,10 @@ public class User{
         this.LastName = LastName;
         this.Email = Email;
         this.PhoneNumber = PhoneNumber;
+        this.profilePhoto = new ProfilePhoto();
     }
+
+
 
 
 

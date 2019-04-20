@@ -12,19 +12,21 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sendtivity.R;
+import com.hbb20.CountryCodePicker;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PhoneNumberActivity extends Activity {
-    String arr[] = {"+90"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_number);
 
-        final Spinner spinner = findViewById(R.id.PhoneSpinner);
+        final CountryCodePicker spinner = findViewById(R.id.PhoneSpinner);
         final EditText NumberET = findViewById(R.id.PhoneNumberET);
-        ArrayAdapter adapter = new ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,arr);
-        spinner.setAdapter(adapter);
 
 
         findViewById(R.id.PhoneNumberRestoreBtn).setOnClickListener(new View.OnClickListener() {
@@ -38,7 +40,7 @@ public class PhoneNumberActivity extends Activity {
         findViewById(R.id.PhoneResumeBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String number = String.valueOf(spinner.getSelectedItem()) + NumberET.getText().toString();
+                String number = spinner.getSelectedCountryCodeWithPlus() + NumberET.getText().toString();
                 Intent intent = new Intent(PhoneNumberActivity.this,PhoneVerifyActivity.class);
                 if(number.isEmpty() || NumberET.getText().toString().length()<10){
                     Toast.makeText(

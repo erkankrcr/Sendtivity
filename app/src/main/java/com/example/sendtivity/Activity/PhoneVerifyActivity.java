@@ -118,6 +118,7 @@ public class PhoneVerifyActivity extends Activity {
         @Override
         public void onVerificationFailed(FirebaseException e) {
             System.out.println("Başarısız");
+            System.out.println(e.getMessage());
             if (e instanceof FirebaseAuthInvalidCredentialsException) {
                 // Invalid request
                 // ...

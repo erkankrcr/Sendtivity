@@ -21,6 +21,18 @@
             "package_name": "com.example.sendtivity",
             "certificate_hash": "5a5d05b6a8ec7b518e4626a6f35b1ca7d9452214"
           }
+        },
+        {
+          "client_id": "328630731499-p7kb48a8q2oajscofp1gbiugtqqq1c01.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sendtivity",
+            "certificate_hash": "d8f54d40ecb02e59fb1e987cd53193675925efef"
+          }
+        },
+        {
+          "client_id": "328630731499-s4r7fup9qp253906orh92ije1lfifjir.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [

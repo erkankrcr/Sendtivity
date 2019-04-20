@@ -38,7 +38,7 @@ public class SplashActivity extends Activity {
                     SharedPreferences sharedPreferences = getSharedPreferences("LoginInfo",MODE_PRIVATE);
 
                     if (sharedPreferences.getBoolean("RememberMe",false)){
-                        Intent intent = new Intent(SplashActivity.this,PhoneNumberActivity.class);
+                        Intent intent = new Intent(SplashActivity.this,MainActivity.class);
                         startActivity(intent);
                     }else{
                         Intent intent = new Intent(SplashActivity.this,PhoneNumberActivity.class);

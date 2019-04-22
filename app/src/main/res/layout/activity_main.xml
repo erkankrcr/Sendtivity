@@ -16,10 +16,13 @@
 
     </android.support.v4.view.ViewPager>
 
-    <android.support.design.widget.BottomNavigationView
+    <com.luseen.spacenavigation.SpaceNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:active_item_color="#6A1CCF"
+        app:centre_button_color="#6A1CCF"
+        app:space_item_icon_only_size="40dp"
         android:layout_alignParentBottom="true"
         app:menu="@menu/navigation" />
 

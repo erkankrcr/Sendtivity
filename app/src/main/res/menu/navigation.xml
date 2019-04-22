@@ -3,7 +3,8 @@
     <item
         android:id="@+id/navigation_message"
         android:icon="@drawable/baseline_message_black_48"
-        android:title="Mesajlaşma" />
+        android:title="Mesajlaşma"
+        />
 
     <item
         android:id="@+id/navigation_home"

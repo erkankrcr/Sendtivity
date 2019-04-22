@@ -1,47 +1,64 @@
 package com.example.sendtivity.Activity;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.example.sendtivity.Listeners.FragmentListener;
 import com.example.sendtivity.R;
+import com.luseen.spacenavigation.SpaceItem;
+import com.luseen.spacenavigation.SpaceNavigationView;
+import com.luseen.spacenavigation.SpaceOnClickListener;
 
 
 public class MainActivity extends Activity{
-    private BottomNavigationView navigationView;
+    private SpaceNavigationView spaceNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        navigationView = findViewById(R.id.navigation);
-        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        spaceNavigationCreate(savedInstanceState);
+
+
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        spaceNavigationView.onSaveInstanceState(outState);
+    }
+
+
+    public void spaceNavigationCreate(Bundle savedInstanceState){
+        spaceNavigationView = (SpaceNavigationView) findViewById(R.id.navigation);
+        spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
+        spaceNavigationView.addSpaceItem(new SpaceItem("Mesajlaşma", R.drawable.baseline_message_black_48));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Akış", R.drawable.baseline_home_black_48));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Profil", R.drawable.baseline_person_black_48));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Ayarlar", R.drawable.baseline_settings_black_48));
+        spaceNavigationView.showIconOnly();
+
+        spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-                    case R.id.navigation_message:
+            public void onCentreButtonClick() {
+                Toast.makeText(MainActivity.this,"onCentreButtonClick", Toast.LENGTH_SHORT).show();
 
-                        return true;
-                    case R.id.navigation_home:
+            }
 
-                        return true;
-                    case R.id.navigation_profil:
+            @Override
+            public void onItemClick(int itemIndex, String itemName) {
+                Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
 
-                        return true;
-                    case R.id.navigation_settings:
+            }
 
-                        return true;
-                    default:
-                        return true;
-                }
+            @Override
+            public void onItemReselected(int itemIndex, String itemName) {
+                Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
 
             }
         });
-    }
 
+    }
 }

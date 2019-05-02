@@ -11,6 +11,7 @@ import com.example.sendtivity.Class.Post;
 
 import com.example.sendtivity.R;
 import com.example.sendtivity.ViewHolders.TimeLineViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.zip.Inflater;
@@ -41,9 +42,13 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     public void onBindViewHolder(@NonNull TimeLineViewHolder timeLineViewHolder, int i) {
         Post post = posts.get(i);
 
-        timeLineViewHolder.postID.setText(post.PostID);
+
         timeLineViewHolder.postText.setText(post.PostText);
-        timeLineViewHolder.userID.setText(post.UserID);
+        timeLineViewHolder.userName.setText(post.UserName);
+        Picasso.get().load(post.PostImage).placeholder(R.drawable.baseline_call_merge_black_48).into(timeLineViewHolder.postImage);
+        Picasso.get().load(post.UserProfileImageUri).placeholder(R.drawable.baseline_call_merge_black_48).into(timeLineViewHolder.userProfilePhoto);
+
+
 
     }
 

@@ -1,20 +1,28 @@
 package com.example.sendtivity.Activity;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.sendtivity.Class.Post;
+import com.example.sendtivity.Class.User;
+import com.example.sendtivity.Fragments.PostSendFragment;
 import com.example.sendtivity.Fragments.TimeLineFragment;
+import com.example.sendtivity.Listeners.FragmentListener;
 import com.example.sendtivity.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements FragmentListener {
     private SpaceNavigationView spaceNavigationView;
+    public  DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +30,7 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
 
         spaceNavigationCreate(savedInstanceState);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
 
@@ -47,6 +56,16 @@ public class MainActivity extends Activity{
             @Override
             public void onCentreButtonClick() {
                 Toast.makeText(MainActivity.this,"onCentreButtonClick", Toast.LENGTH_SHORT).show();
+                /*
+                String PostKey = databaseReference.push().getKey();
+                SharedPreferences sharedPreferences = getSharedPreferences("AppInfo",MODE_PRIVATE);
+                String UserJson = sharedPreferences.getString("UserJson","null");
+                Gson gson = new Gson();
+                User user = gson.fromJson(UserJson,User.class);
+                */
+                getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame, new PostSendFragment(),"PS_Fragment").commit();
+
+
 
             }
 
@@ -76,6 +95,11 @@ public class MainActivity extends Activity{
 
             }
         });
+
+    }
+
+    @Override
+    public void FragmentReplace(Fragment fragmentParameter) {
 
     }
 }

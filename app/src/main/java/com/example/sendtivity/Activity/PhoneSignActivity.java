@@ -1,13 +1,19 @@
 package com.example.sendtivity.Activity;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -33,11 +39,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -61,13 +69,33 @@ public class PhoneSignActivity extends Activity {
     private DatabaseReference myRef;
     private StorageReference StoreRef;
     private String PhotoId;
-
+    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1905;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_sign);
+        boolean permission = checkAndRequestPermissions();
+        if (!permission){
+            Toast.makeText(this,"Gerekli İzinler Alındı",Toast.LENGTH_SHORT).show();
+        }else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle("Olamaz!!")
+                    .setMessage("Gerekli İzinler Sağlanamadığı için işleme Devam Edemiyorum.")
+                    .setCancelable(false)
+                    .setPositiveButton("Hallediyorum", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(!checkAndRequestPermissions()){
+                                dialog.dismiss();
+                            }else{
+                                Toast.makeText(PhoneSignActivity.this,"İznler Alınamadı, Uygulama Çökebilir!!!",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
         mAuth = FirebaseAuth.getInstance();
         databaseRef = FirebaseDatabase.getInstance();
         myRef = databaseRef.getReference("User");
@@ -157,8 +185,11 @@ public class PhoneSignActivity extends Activity {
                                 "Kayıt Tamamlandı",
                                 Toast.LENGTH_LONG
                         ).show();
-                        SharedPreferences sharedPreferences = getSharedPreferences("LoginInfo",MODE_PRIVATE);
+                        SharedPreferences sharedPreferences = getSharedPreferences("AppInfo",MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
+                        Gson gson = new Gson();
+                        String UserJson = gson.toJson(user);
+                        editor.putString("UserJson",UserJson);
                         editor.putBoolean("RememberMe",true);
                         editor.commit();
                         Intent intent = new Intent(PhoneSignActivity.this,MainActivity.class);
@@ -225,5 +256,27 @@ public class PhoneSignActivity extends Activity {
             }
         }
         return list;
+    }
+
+    private boolean checkAndRequestPermissions() {
+        int permissionCAMERA = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
+        int permissionWRITE_EXTERNAL_STORAGE = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permissionREAD_CONTACTS = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (permissionREAD_CONTACTS != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_CONTACTS);
+        }
+        if (permissionCAMERA != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.CAMERA);
+        }
+        if (permissionWRITE_EXTERNAL_STORAGE != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+
+        return true;
     }
 }

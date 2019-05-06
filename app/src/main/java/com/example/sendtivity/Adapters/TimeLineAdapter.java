@@ -67,10 +67,20 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
                 public void run() {
                     try {
                         file1 = File.createTempFile("image","jpg");
-                        storageReference.child("User").child(post.UserID).child("ProfilePhoto").child(post.UserProfileImageId).getFile(file1).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        storageReference
+                                .child("User")
+                                .child(post.UserID)
+                                .child("ProfilePhoto")
+                                .child(post.UserProfileImageId)
+                                .getFile(file1)
+                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Picasso.get().load(file1).placeholder(R.drawable.baseline_call_merge_black_48).into(timeLineViewHolder.userProfilePhoto);
+                                Picasso
+                                        .get()
+                                        .load(file1)
+                                        .placeholder(R.drawable.baseline_call_merge_black_48)
+                                        .into(timeLineViewHolder.userProfilePhoto);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -92,7 +102,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
                         file2 = File.createTempFile("image","jpg");
                         storageReference
                                 .child("Post")
-                                .child(post.PostID)
+                                .child(post.PostImageId)
                                 .getFile(file2)
                                 .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override

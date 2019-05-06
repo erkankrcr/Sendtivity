@@ -2,31 +2,59 @@ package com.example.sendtivity.Fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
+import com.example.sendtivity.Class.Post;
 import com.example.sendtivity.Class.User;
 import com.example.sendtivity.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 
 public class PostSendFragment extends Fragment {
-
+    Post post;
     SharedPreferences sharedPreferences;
+    StorageReference storageReference;
+    DatabaseReference databaseReference;
     String UserJson;
     Gson gson;
     ImageView UserProfilePhoto;
     TextView UserName;
     ImageView PostImage;
+    Button SendButton;
+    EditText PostText;
+    File localFile;
+    Uri ImageUri;
+    private static final int IMAGE_PICK = 1;
+    private static final int IMAGE_CAPTURE = 2;
 
     public PostSendFragment(){
 
@@ -39,16 +67,111 @@ public class PostSendFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("AppInfo", Context.MODE_PRIVATE);
         UserJson = sharedPreferences.getString("UserJson","null");
         gson = new Gson();
-        User user = gson.fromJson(UserJson,User.class);
+        post = new Post();
+        final User user = gson.fromJson(UserJson,User.class);
         UserProfilePhoto = view.findViewById(R.id.PS_Image_UserProfileImage);
         UserName = view.findViewById(R.id.PS_Text_UserName);
+        PostImage = view.findViewById(R.id.PS_Edit_PostImage);
+        SendButton = view.findViewById(R.id.PS_Button_Gonder);
+        PostText = view.findViewById(R.id.PS_Edit_PostText);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Post");
 
-       Picasso.get().load(user.profilePhoto.ImageUrl).placeholder(R.drawable.baseline_call_merge_black_48).into(UserProfilePhoto);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                storageReference = FirebaseStorage
+                        .getInstance()
+                        .getReference()
+                        .child("User")
+                        .child(user.mAuthID)
+                        .child("ProfilePhoto")
+                        .child(user.profilePhoto.photoID);
+
+                try {
+                    localFile = File.createTempFile("images", "jpg");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Picasso.get().load(localFile).placeholder(R.drawable.baseline_call_merge_black_48).into(UserProfilePhoto);
+                        post.UserProfileImageId = user.profilePhoto.photoID;
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.wtf("UserPhoto",e.getMessage());
+                    }
+                });
+            }
+        });
+        thread.run();
         UserName.setText(user.Name + " " +user.LastName);
+
+        PostImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "Bir Fotoğraf Seçin"), 1);
+
+            }
+        });
+
+        SendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                post.PostText = PostText.getText().toString();
+                post.PostID = databaseReference.push().getKey();
+                post.UserName = user.Name+" "+user.LastName;
+                post.UserID = user.mAuthID;
+                post.PostImageId = databaseReference.push().getKey();
+                storageReference = FirebaseStorage
+                        .getInstance()
+                        .getReference()
+                        .child("Post")
+                        .child(post.PostImageId);
+               if(post.putImage){
+                   storageReference.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                       @Override
+                       public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                           databaseReference.child(post.PostID).setValue(post);
+                           Toast.makeText(getActivity(),"Tamamlandı",Toast.LENGTH_SHORT).show();
+                       }
+                   }).addOnFailureListener(new OnFailureListener() {
+                       @Override
+                       public void onFailure(@NonNull Exception e) {
+                           System.out.println(e.getMessage());
+
+                       }
+                   });
+               }else{
+                   databaseReference.child(post.PostID).setValue(post);
+                   Toast.makeText(getActivity(),"Tamamlandı",Toast.LENGTH_SHORT).show();
+               }
+
+
+            }
+        });
+        
 
 
 
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IMAGE_PICK && resultCode == getActivity().RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            Picasso.get().load(data.getData()).into(PostImage);
+            ImageUri = data.getData();
+            post.putImage = true;
+        }
     }
 }

@@ -154,7 +154,6 @@ public class PhoneSignActivity extends Activity {
                 && data != null && data.getData() != null )
         {
             filePath = data.getData();
-            user.profilePhoto.ImageUrl=filePath.getPath();
             user.profilePhoto.photoID=PhotoId;
             user.profilePhoto.useProfilePhoto = true;
 
@@ -179,22 +178,31 @@ public class PhoneSignActivity extends Activity {
                     public void run() {
                         progressBar.setProgress(0);
                         user.PhoneNumberList = ContactList();
-                        myRef.child(mAuth.getUid()).setValue(user);
-                        Toast.makeText(
-                                PhoneSignActivity.this,
-                                "Kayıt Tamamlandı",
-                                Toast.LENGTH_LONG
-                        ).show();
-                        SharedPreferences sharedPreferences = getSharedPreferences("AppInfo",MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        Gson gson = new Gson();
-                        String UserJson = gson.toJson(user);
-                        editor.putString("UserJson",UserJson);
-                        editor.putBoolean("RememberMe",true);
-                        editor.commit();
-                        Intent intent = new Intent(PhoneSignActivity.this,MainActivity.class);
-                        startActivity(intent);
-                        Successbtn.setVisibility(View.VISIBLE);
+                        StoreRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                             if(task.isSuccessful()){
+                                 Uri uri = task.getResult();
+                                 user.profilePhoto.ImageUrl = uri.toString();
+                                 myRef.child(mAuth.getUid()).setValue(user);
+                                 Toast.makeText(
+                                         PhoneSignActivity.this,
+                                         "Kayıt Tamamlandı",
+                                         Toast.LENGTH_LONG
+                                 ).show();
+                                 SharedPreferences sharedPreferences = getSharedPreferences("AppInfo",MODE_PRIVATE);
+                                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                                 Gson gson = new Gson();
+                                 String UserJson = gson.toJson(user);
+                                 editor.putString("UserJson",UserJson);
+                                 editor.putBoolean("RememberMe",true);
+                                 editor.commit();
+                                 Intent intent = new Intent(PhoneSignActivity.this,MainActivity.class);
+                                 startActivity(intent);
+                                 Successbtn.setVisibility(View.VISIBLE);
+                             }
+                            }
+                        });
                     }
                 }, 500);
             }

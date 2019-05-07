@@ -76,10 +76,6 @@ public class PostSendFragment extends Fragment {
         PostText = view.findViewById(R.id.PS_Edit_PostText);
         databaseReference = FirebaseDatabase.getInstance().getReference("Post");
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
                 storageReference = FirebaseStorage
                         .getInstance()
                         .getReference()
@@ -87,27 +83,9 @@ public class PostSendFragment extends Fragment {
                         .child(user.mAuthID)
                         .child("ProfilePhoto")
                         .child(user.profilePhoto.photoID);
-
-                try {
-                    localFile = File.createTempFile("images", "jpg");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Picasso.get().load(localFile).placeholder(R.drawable.baseline_call_merge_black_48).into(UserProfilePhoto);
-                        post.UserProfileImageId = user.profilePhoto.photoID;
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.wtf("UserPhoto",e.getMessage());
-                    }
-                });
-            }
-        });
-        thread.run();
+        Picasso.get().load(user.profilePhoto.ImageUrl).placeholder(R.drawable.baseline_call_merge_black_48).into(UserProfilePhoto);
+        post.UserProfileImageId = user.profilePhoto.photoID;
+        post.PostUserImageUrl = user.profilePhoto.ImageUrl;
         UserName.setText(user.Name + " " +user.LastName);
 
         PostImage.setOnClickListener(new View.OnClickListener() {
@@ -131,14 +109,24 @@ public class PostSendFragment extends Fragment {
                 storageReference = FirebaseStorage
                         .getInstance()
                         .getReference()
-                        .child("Post")
-                        .child(post.PostImageId);
+                        .child("Post");
                if(post.putImage){
-                   storageReference.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                   storageReference.child(post.PostID).putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                        @Override
                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                           databaseReference.child(post.PostID).setValue(post);
+                           storageReference.child(post.PostID).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                               @Override
+                               public void onComplete(@NonNull Task<Uri> task) {
+                                   if(task.isSuccessful()){
+                                       Uri uri = task.getResult();
+                                       post.PostImageId = uri.toString();
+                                       databaseReference.child(post.PostID).setValue(post);
+
+                                   }
+                               }
+                           });
                            Toast.makeText(getActivity(),"Tamamlandı",Toast.LENGTH_SHORT).show();
+
                        }
                    }).addOnFailureListener(new OnFailureListener() {
                        @Override

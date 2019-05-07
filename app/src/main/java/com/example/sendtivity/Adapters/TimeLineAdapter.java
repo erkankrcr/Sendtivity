@@ -62,98 +62,26 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         if (post.putImage){
             timeLineViewHolder.postText.setText(post.PostText);
             timeLineViewHolder.userName.setText(post.UserName);
-            Thread UserImageThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        file1 = File.createTempFile("image","jpg");
-                        storageReference
-                                .child("User")
-                                .child(post.UserID)
-                                .child("ProfilePhoto")
-                                .child(post.UserProfileImageId)
-                                .getFile(file1)
-                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                 Picasso
                                         .get()
-                                        .load(file1)
+                                        .load(post.PostUserImageUrl)
                                         .placeholder(R.drawable.baseline_call_merge_black_48)
                                         .into(timeLineViewHolder.userProfilePhoto);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                System.out.println(e.getMessage());
-                            }
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println(e.getMessage());
-                    }
-                }
-            });
-            UserImageThread.run();
-            Thread PostImageThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        file2 = File.createTempFile("image","jpg");
-                        storageReference
-                                .child("Post")
-                                .child(post.PostImageId)
-                                .getFile(file2)
-                                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                 Picasso
                                         .get()
-                                        .load(file2)
+                                        .load(post.PostImageUrl)
                                         .placeholder(R.drawable.baseline_call_merge_black_48)
                                         .into(timeLineViewHolder.postImage);
 
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                System.out.println(e.getMessage());
-                            }
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println(e.getMessage());
-                    }
-                }
-            });
-            PostImageThread.run();
         }else{
             timeLineViewHolder.postText.setText(post.PostText);
             timeLineViewHolder.userName.setText(post.UserName);
             timeLineViewHolder.postImage.setVisibility(View.GONE);
-            Thread UserImageThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        file1 = File.createTempFile("image","jpg");
-                        storageReference.child("User").child(post.UserID).child("ProfilePhoto").child(post.UserProfileImageId).getFile(file1).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Picasso.get().load(file1).placeholder(R.drawable.baseline_call_merge_black_48).into(timeLineViewHolder.userProfilePhoto);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                System.out.println(e.getMessage());
-                            }
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.out.println(e.getMessage());
-                    }
-                }
-            });
-            UserImageThread.run();
+            Picasso
+                    .get()
+                    .load(post.PostUserImageUrl)
+                    .placeholder(R.drawable.baseline_call_merge_black_48)
+                    .into(timeLineViewHolder.userProfilePhoto);
         }
     }
 

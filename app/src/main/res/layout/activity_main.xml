@@ -7,14 +7,19 @@
     tools:context=".Activity.MainActivity"
     android:orientation="vertical">
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <FrameLayout
             android:id="@+id/Main_Activity_frame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_above="@id/Main_Activity_navigation">
 
         </FrameLayout>
+    </LinearLayout>
+
+
 
 
     <com.luseen.spacenavigation.SpaceNavigationView

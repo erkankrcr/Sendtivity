@@ -71,6 +71,7 @@ public class PhoneVerifyActivity extends Activity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Intent intent = new Intent(PhoneVerifyActivity.this,PhoneSignActivity.class);
+                    intent.putExtra("PhoneNumber",number);
                     startActivity(intent);
                 }else{
                     System.out.println("SignInWithCredential Failed");

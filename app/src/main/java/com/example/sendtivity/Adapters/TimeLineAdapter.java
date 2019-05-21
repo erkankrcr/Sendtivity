@@ -13,17 +13,12 @@ import com.example.sendtivity.Class.Post;
 
 import com.example.sendtivity.R;
 import com.example.sendtivity.ViewHolders.TimeLineViewHolder;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -57,31 +52,43 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final TimeLineViewHolder timeLineViewHolder, int i) {
         final Post post = posts.get(i);
+        Picasso.get().cancelRequest(timeLineViewHolder.userProfilePhoto);
+        Picasso.get().cancelRequest(timeLineViewHolder.postImage);
+
+        if (timeLineViewHolder.itemView.getTag() == null) {
+
+            timeLineViewHolder.postImage.setVisibility(View.VISIBLE);
 
 
-        if (post.putImage){
-            timeLineViewHolder.postText.setText(post.PostText);
-            timeLineViewHolder.userName.setText(post.UserName);
-                                Picasso
-                                        .get()
-                                        .load(post.PostUserImageUrl)
-                                        .placeholder(R.drawable.baseline_call_merge_black_48)
-                                        .into(timeLineViewHolder.userProfilePhoto);
-                                Picasso
-                                        .get()
-                                        .load(post.PostImageUrl)
-                                        .placeholder(R.drawable.baseline_call_merge_black_48)
-                                        .into(timeLineViewHolder.postImage);
+            if (post.putImage){
+                timeLineViewHolder.postText.setText(post.PostText);
+                timeLineViewHolder.userName.setText(post.UserName);
+                Picasso
+                        .get()
+                        .load(post.PostUserImageUrl)
+                        .placeholder(R.drawable.baseline_call_merge_black_48)
+                        .into(timeLineViewHolder.userProfilePhoto);
+                Picasso
+                        .get()
+                        .load(post.PostImageUrl)
+                        .placeholder(R.drawable.baseline_call_merge_black_48)
+                        .into(timeLineViewHolder.postImage);
 
-        }else{
-            timeLineViewHolder.postText.setText(post.PostText);
-            timeLineViewHolder.userName.setText(post.UserName);
-            timeLineViewHolder.postImage.setVisibility(View.GONE);
-            Picasso
-                    .get()
-                    .load(post.PostUserImageUrl)
-                    .placeholder(R.drawable.baseline_call_merge_black_48)
-                    .into(timeLineViewHolder.userProfilePhoto);
+            }else{
+                timeLineViewHolder.postText.setText(post.PostText);
+                timeLineViewHolder.userName.setText(post.UserName);
+                timeLineViewHolder.postImage.setVisibility(View.GONE);
+                Picasso
+                        .get()
+                        .load(post.PostUserImageUrl)
+                        .placeholder(R.drawable.baseline_call_merge_black_48)
+                        .into(timeLineViewHolder.userProfilePhoto);
+            }
+
+            timeLineViewHolder.itemView.setTag(post);
+
+        } else {
+            timeLineViewHolder.itemView.setTag(post);
         }
     }
 

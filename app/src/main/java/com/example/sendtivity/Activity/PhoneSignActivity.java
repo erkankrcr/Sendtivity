@@ -63,6 +63,7 @@ public class PhoneSignActivity extends Activity {
     private String Email;
     private Uri filePath;
     private User user;
+    private Intent intent;
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
     private FirebaseDatabase databaseRef;
@@ -103,6 +104,7 @@ public class PhoneSignActivity extends Activity {
         PhotoId = myRef.push().getKey();
         StoreRef = mStorageRef.child("User/"+mAuth.getUid()+"/ProfilePhoto/"+PhotoId);
         user = new User();
+        intent = getIntent();
         imageView = ((ImageView) findViewById(R.id.PSA_photoImage));
         NameET = findViewById(R.id.PSA_NameET);
         LastNameET = findViewById(R.id.PSA_LastnameET);
@@ -184,6 +186,7 @@ public class PhoneSignActivity extends Activity {
                              if(task.isSuccessful()){
                                  Uri uri = task.getResult();
                                  user.profilePhoto.ImageUrl = uri.toString();
+                                 user.PhoneNumber = intent.getStringExtra("PhoneNumber");
                                  myRef.child(mAuth.getUid()).setValue(user);
                                  Toast.makeText(
                                          PhoneSignActivity.this,
@@ -252,7 +255,7 @@ public class PhoneSignActivity extends Activity {
                         if (lastname==name || lastnumber == person_phoneNumber){
 
                         }else{
-                            list.add(new PersonInfo(name, person_phoneNumber)); // ismini ve telefon numarasını list içine at
+                            list.add(person_phoneNumber.replace(" ", "")); // ismini ve telefon numarasını list içine at
                             lastnumber = person_phoneNumber;
                             lastname = name;
                         }

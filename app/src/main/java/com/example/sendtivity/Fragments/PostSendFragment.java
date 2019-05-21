@@ -139,6 +139,7 @@ public class PostSendFragment extends Fragment {
                    databaseReference.child(post.PostID).setValue(post);
                    Toast.makeText(getActivity(),"Tamamlandı",Toast.LENGTH_SHORT).show();
                }
+               getActivity().getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame,new TimeLineFragment()).commit();
 
 
             }

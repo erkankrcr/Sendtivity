@@ -119,13 +119,14 @@ public class PostSendFragment extends Fragment {
                                public void onComplete(@NonNull Task<Uri> task) {
                                    if(task.isSuccessful()){
                                        Uri uri = task.getResult();
-                                       post.PostImageId = uri.toString();
+                                       post.PostImageUrl = uri.toString();
                                        databaseReference.child(post.PostID).setValue(post);
 
                                    }
                                }
                            });
                            Toast.makeText(getActivity(),"Tamamlandı",Toast.LENGTH_SHORT).show();
+                           getActivity().getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame,new TimeLineFragment()).commit();
 
                        }
                    }).addOnFailureListener(new OnFailureListener() {
@@ -138,9 +139,8 @@ public class PostSendFragment extends Fragment {
                }else{
                    databaseReference.child(post.PostID).setValue(post);
                    Toast.makeText(getActivity(),"Tamamlandı",Toast.LENGTH_SHORT).show();
+                   getActivity().getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame,new TimeLineFragment()).commit();
                }
-               getActivity().getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame,new TimeLineFragment()).commit();
-
 
             }
         });

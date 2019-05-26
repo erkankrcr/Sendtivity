@@ -2,6 +2,7 @@ package com.example.sendtivity.Activity;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import com.example.sendtivity.Fragments.TimeLineFragment;
 import com.example.sendtivity.Fragments.WelcomeFragment;
 import com.example.sendtivity.Listeners.FragmentListener;
 import com.example.sendtivity.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
@@ -29,6 +31,7 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
     TimeLineFragment timeLineFragment;
     PostSendFragment postSendFragment;
     MessageListFragment messageListFragment;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
         timeLineFragment = new TimeLineFragment();
         postSendFragment = new PostSendFragment();
         messageListFragment = new MessageListFragment();
+        mAuth = FirebaseAuth.getInstance();
 
 
 
@@ -101,6 +105,14 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
             case 2:
                 break;
             case 3:
+                SharedPreferences preferences = getSharedPreferences("AppInfo",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("UserJson","Null");
+                editor.putBoolean("RememberMe",false);
+                editor.commit();
+                mAuth.signOut();
+                Intent intent = new Intent(MainActivity.this,SplashActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

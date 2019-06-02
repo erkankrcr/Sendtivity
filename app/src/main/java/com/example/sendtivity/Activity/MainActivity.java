@@ -105,6 +105,7 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
             case 2:
                 break;
             case 3:
+                /*
                 SharedPreferences preferences = getSharedPreferences("AppInfo",MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("UserJson","Null");
@@ -113,6 +114,8 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
                 mAuth.signOut();
                 Intent intent = new Intent(MainActivity.this,SplashActivity.class);
                 startActivity(intent);
+                */
+                Toast.makeText(MainActivity.this,"Uygulamadan çıkıldı diye bilin :)",Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

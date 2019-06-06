@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import android.provider.ContactsContract;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.sendtivity.Class.PersonInfo;
 import com.example.sendtivity.Class.ProfilePhoto;
 import com.example.sendtivity.Class.User;
@@ -47,6 +49,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import io.fabric.sdk.android.Fabric;
 
 
 public class PhoneSignActivity extends Activity {
@@ -73,10 +77,14 @@ public class PhoneSignActivity extends Activity {
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1905;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_sign);
+
+        Fabric.with(this, new Crashlytics());
+
         boolean permission = checkAndRequestPermissions();
         if (!permission){
             Toast.makeText(this,"Gerekli İzinler Alındı",Toast.LENGTH_SHORT).show();
@@ -125,6 +133,7 @@ public class PhoneSignActivity extends Activity {
 
         });
 
+
         Successbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,8 +151,6 @@ public class PhoneSignActivity extends Activity {
                 }
             }
         });
-
-
 
     }
 
@@ -175,6 +182,7 @@ public class PhoneSignActivity extends Activity {
         StoreRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -22,6 +22,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListViewHold
     public MessageListAdapter(Context context, ArrayList arrayList){
         this.context = context;
         this.arrayList = arrayList;
+
+
+
     }
 
     @NonNull

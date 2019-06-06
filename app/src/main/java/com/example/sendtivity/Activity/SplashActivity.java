@@ -13,10 +13,13 @@ import android.os.Bundle;
 import android.view.Display;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.sendtivity.R;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import io.fabric.sdk.android.Fabric;
 
 public class SplashActivity extends Activity {
 
@@ -24,6 +27,9 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        Fabric.with(this, new Crashlytics());
+        
         isInternetCheck();
 
     }

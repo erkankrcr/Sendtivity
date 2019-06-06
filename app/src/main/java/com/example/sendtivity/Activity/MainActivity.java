@@ -5,15 +5,17 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.sendtivity.Class.Post;
-import com.example.sendtivity.Class.User;
+import com.crashlytics.android.Crashlytics;
 import com.example.sendtivity.Fragments.MessageListFragment;
 import com.example.sendtivity.Fragments.PostSendFragment;
+import com.example.sendtivity.Fragments.ProfileFragment;
 import com.example.sendtivity.Fragments.TimeLineFragment;
 import com.example.sendtivity.Fragments.WelcomeFragment;
-import com.example.sendtivity.Listeners.FragmentListener;
 import com.example.sendtivity.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -24,13 +26,16 @@ import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
 
+import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends Activity implements FragmentListener , SpaceOnClickListener {
+
+public class MainActivity extends Activity implements SpaceOnClickListener {
     private SpaceNavigationView spaceNavigationView;
     public  DatabaseReference databaseReference;
     TimeLineFragment timeLineFragment;
     PostSendFragment postSendFragment;
     MessageListFragment messageListFragment;
+    ProfileFragment profileFragment;
     FirebaseAuth mAuth;
 
     @Override
@@ -38,11 +43,14 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Fabric.with(this, new Crashlytics());
+
         spaceNavigationCreate(savedInstanceState);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         timeLineFragment = new TimeLineFragment();
         postSendFragment = new PostSendFragment();
         messageListFragment = new MessageListFragment();
+        profileFragment = new ProfileFragment();
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -71,10 +79,6 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
         spaceNavigationView.setSpaceOnClickListener(this);
     }
 
-    @Override
-    public void FragmentReplace(Fragment fragmentParameter) {
-
-    }
 
     @Override
     public void onCentreButtonClick() {
@@ -103,9 +107,12 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
                 getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame,timeLineFragment).commit();
                 break;
             case 2:
+                Bundle bundle = new Bundle();
+                bundle.putString("mAuthID",mAuth.getUid());
+                profileFragment.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame,profileFragment).commit();
                 break;
             case 3:
-                /*
                 SharedPreferences preferences = getSharedPreferences("AppInfo",MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("UserJson","Null");
@@ -114,7 +121,7 @@ public class MainActivity extends Activity implements FragmentListener , SpaceOn
                 mAuth.signOut();
                 Intent intent = new Intent(MainActivity.this,SplashActivity.class);
                 startActivity(intent);
-                */
+
                 Toast.makeText(MainActivity.this,"Uygulamadan çıkıldı diye bilin :)",Toast.LENGTH_SHORT).show();
                 break;
             default:

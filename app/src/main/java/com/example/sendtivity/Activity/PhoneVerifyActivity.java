@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 import com.example.sendtivity.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +26,8 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
+import io.fabric.sdk.android.Fabric;
+
 public class PhoneVerifyActivity extends Activity {
     private FirebaseAuth mAuth;
     private String number;
@@ -35,6 +39,9 @@ public class PhoneVerifyActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
+
+        Fabric.with(this, new Crashlytics());
+
         mAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.PhoneVerifyProgress);

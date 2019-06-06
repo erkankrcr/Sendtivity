@@ -1,15 +1,21 @@
 package com.example.sendtivity.Adapters;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sendtivity.Class.Post;
 
+import com.example.sendtivity.Fragments.TimeLineFragment;
+import com.example.sendtivity.Listeners.FragmentListener;
 import com.example.sendtivity.R;
 import com.example.sendtivity.ViewHolders.TimeLineViewHolder;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +31,9 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     Context context;
     StorageReference storageReference;
     DatabaseReference databaseReference;
+    Bundle bundle;
+    TimeLineFragment timeLineFragment;
+    Fragment CurrentFragment;
 
 
     public TimeLineAdapter(Context context, ArrayList<Post> posts){
@@ -32,6 +41,14 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         this.context = context;
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("Post");
+
+    }
+    public TimeLineAdapter(Context context, ArrayList<Post> posts,Fragment Currentfragment){
+        this.posts = posts;
+        this.context = context;
+        storageReference = FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Post");
+        this.CurrentFragment = Currentfragment;
 
     }
 
@@ -71,6 +88,19 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
                         .placeholder(R.drawable.baseline_call_merge_black_48)
                         .into(timeLineViewHolder.userProfilePhoto);
             }
+            timeLineViewHolder.userProfilePhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    timeLineFragment = new TimeLineFragment();
+                    bundle = new Bundle();
+                    bundle.putString("mAuthID",post.UserID);
+                    timeLineFragment.setArguments(bundle);
+                    FragmentListener fragmentListener = ((FragmentListener) CurrentFragment);
+                    fragmentListener.FragmentReplace(timeLineFragment);
+                    Log.wtf("debug","Adapter tarafı Çalıştı");
+
+                }
+            });
 
     }
 

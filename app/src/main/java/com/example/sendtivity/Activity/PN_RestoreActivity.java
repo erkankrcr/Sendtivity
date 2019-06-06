@@ -7,10 +7,13 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.sendtivity.Class.PNR_Class;
 import com.example.sendtivity.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import io.fabric.sdk.android.Fabric;
 
 public class PN_RestoreActivity extends Activity {
     String arr[] = {"+90"};
@@ -20,6 +23,9 @@ public class PN_RestoreActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pn__restore);
+
+        Fabric.with(this, new Crashlytics());
+
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference();

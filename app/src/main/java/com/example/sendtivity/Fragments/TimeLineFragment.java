@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.sendtivity.Adapters.TimeLineAdapter;
 import com.example.sendtivity.Class.GetTimeLineClass;
 import com.example.sendtivity.Class.Post;
+import com.example.sendtivity.Listeners.FragmentListener;
 import com.example.sendtivity.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.functions.FirebaseFunctions;
@@ -21,7 +23,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class TimeLineFragment extends Fragment {
+public class TimeLineFragment extends Fragment implements FragmentListener {
 
     FirebaseAuth mAuth;
     ArrayList<Post> Result = new ArrayList<>();
@@ -40,6 +42,7 @@ public class TimeLineFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.time_line_fragment,container,false);
 
+
         recyclerView = view.findViewById(R.id.TL_recylcerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -56,7 +59,7 @@ public class TimeLineFragment extends Fragment {
 
          value = Get("https://us-central1-sendtivity.cloudfunctions.net/GetTimeLineWeb?mAuthID="+mAuth.getUid());
          GetTimeLineClass timeLineClass = gson.fromJson(value,GetTimeLineClass.class);
-         adapter = new TimeLineAdapter(getActivity(),timeLineClass.Result);
+         adapter = new TimeLineAdapter(getActivity(),timeLineClass.Result,this);
 
          recyclerView.setAdapter(adapter);
 
@@ -84,4 +87,9 @@ public class TimeLineFragment extends Fragment {
     }
 
 
+    @Override
+    public void FragmentReplace(Fragment fragmentParameter) {
+        Log.wtf("debug","Listener Tarafı Çalıştı");
+        getFragmentManager().beginTransaction().replace(R.id.Main_Activity_frame,fragmentParameter).commit();
+    }
 }

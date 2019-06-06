@@ -11,11 +11,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.sendtivity.R;
 import com.hbb20.CountryCodePicker;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.fabric.sdk.android.Fabric;
 
 public class PhoneNumberActivity extends Activity {
 
@@ -24,6 +27,9 @@ public class PhoneNumberActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_number);
+
+        Fabric.with(this, new Crashlytics());
+
 
         final CountryCodePicker spinner = findViewById(R.id.PhoneSpinner);
         final EditText NumberET = findViewById(R.id.PhoneNumberET);

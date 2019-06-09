@@ -1,9 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MessageActivity">
+    tools:context=".Activity.MessageActivity"
+    android:background="#fff"
+    >
+    <RelativeLayout
+        android:id="@+id/MessagePage_User_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#6A1CCF"
+        android:layout_alignParentTop="true">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/MessagePage_User_ProfileImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:civ_border_color="#fff"
+            app:civ_border_width="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/baseline_call_merge_black_48"
+            />
+        <TextView
+            android:id="@+id/MessagePage_User_NameAndSurname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/MessagePage_User_ProfileImage"
+            android:text="Deneme İsimi"
+            android:textSize="25sp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/MessagePage_Message_Recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/MessagePage_User_Layout"
+        app:stackFromEnd="true"
+        app:reverseLayout="true">
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <com.stfalcon.chatkit.messages.MessageInput
+            android:id="@+id/MessagePage_Message_Send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:inputHint="Message Input"
+            app:inputBackground="@color/GrayColor"
+            >
+
+        </com.stfalcon.chatkit.messages.MessageInput>
+    </LinearLayout>
+
+
+</RelativeLayout>

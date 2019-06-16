@@ -38,12 +38,14 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_below="@id/MessagePage_User_Layout"
+        android:layout_above="@id/MessagePage_MessageInput_Layout"
         app:stackFromEnd="true"
         app:reverseLayout="true">
 
     </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
+        android:id="@+id/MessagePage_MessageInput_Layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">

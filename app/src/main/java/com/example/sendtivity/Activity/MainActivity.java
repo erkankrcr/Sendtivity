@@ -2,6 +2,8 @@ package com.example.sendtivity.Activity;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.example.sendtivity.Fragments.ProfileFragment;
 import com.example.sendtivity.Fragments.TimeLineFragment;
 import com.example.sendtivity.Fragments.WelcomeFragment;
 import com.example.sendtivity.R;
+import com.example.sendtivity.Services.MessageService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,6 +70,13 @@ public class MainActivity extends Activity implements SpaceOnClickListener {
                 }
             }
         });
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("SendtivityChannel","MyNotification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+
+        }
 
 
 

@@ -6,11 +6,6 @@
     android:background="#6A1CCF"
     android:orientation="vertical"
     >
-    <Button
-        android:id="@+id/LoginBackBtn"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@drawable/baseline_reply_24"/>
 
     <LinearLayout
         android:layout_width="match_parent"

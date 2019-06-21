@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sendtivity">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,28 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service
-            android:name=".Services.MessageService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <activity android:name=".Activity.MessageActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"
-            ></activity>
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1733552901379514~3377968734" />
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
-        <meta-data
-            android:name="firebase_crash_collection_enabled"
-            android:value="false" />
+            android:screenOrientation="portrait" />
 
         <activity android:name=".Activity.MainActivity"
             android:screenOrientation="portrait"
@@ -68,6 +51,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        // push notification , ads ve Crash ile ilgili ayarlar
+        <service
+            android:name=".Services.MessageService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_insert_comment_sendtivity_24dp" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="SendtivityAndroid8" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1733552901379514~3377968734" />
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_crash_collection_enabled"
+            android:value="false" />
+
+
     </application>
 
 </manifest>

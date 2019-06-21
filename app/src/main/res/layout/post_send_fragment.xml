@@ -61,8 +61,8 @@
                 android:id="@+id/PS_Layout_PostScope"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_below="@id/PS_Layout_UserScope"
-                android:layout_above="@id/PS_Button_Component"
                 android:orientation="vertical">
                 <EditText
                     android:id="@+id/PS_Edit_PostText"
@@ -85,29 +85,7 @@
                     android:src="@drawable/ic_add_box_black_24dp"
                      />
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/PS_Button_Component"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentBottom="true">
-                <com.like.LikeButton
-                    app:like_drawable="@drawable/heart_like"
-                    app:unlike_drawable="@drawable/heart_unlike"
-                    app:icon_size="25dp"
-                    android:id="@+id/PS_Button_Like"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <com.like.LikeButton
-                    app:like_drawable="@drawable/ic_insert_comment_sendtivity_24dp"
-                    app:unlike_drawable="@drawable/ic_insert_comment_black_24dp"
-                    app:circle_start_color="#000"
-                    app:circle_end_color="#6A1CCF"
-                    app:icon_size="25dp"
-                    android:id="@+id/PS_Button_Comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
+
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
